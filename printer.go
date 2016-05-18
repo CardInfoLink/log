@@ -12,10 +12,11 @@ import (
 )
 
 const (
-	QuickPay = "quickpay"
-	Phantom  = "phantom"
-	LogDir   = "logs/"
-	FileType = ".log"
+	QuickPay  = "quickpay"
+	Phantom   = "phantom"
+	AngryCard = "angrycard"
+	LogDir    = "logs/"
+	FileType  = ".log"
 )
 
 var LogFile *os.File = nil
@@ -69,13 +70,13 @@ func PreLog() {
 		FileName = strArrays[ilen-1]
 	}
 
-	if (FileName != QuickPay) && (FileName != Phantom) {
+	if (FileName != QuickPay) && (FileName != Phantom) && (FileName != AngryCard) {
 		SetPrinter(NewStandard(os.Stdout, DefaultFormat))
 		return
 	}
 
-	// 类似phantom20160512.log与quickpay20160512.log
-	sName := LogDir + FileName + time.Now().Format("20060102") + FileType
+	// 类似phantom_20160512.log与quickpay_20160512.log
+	sName := LogDir + FileName + "_" + time.Now().Format("20060102") + FileType
 	pFile, err := os.Create(sName)
 	if (err != nil) || (pFile == nil) {
 		slog := fmt.Sprintf("create the log file error, the error is %s\n", err)
@@ -121,7 +122,7 @@ func RemoveLogFile() {
 		if !info.IsDir() && strings.Index(info.Name(), FileType) > 0 {
 			nameArray := []byte(info.Name())
 			var date []byte
-			date = nameArray[len(FileName):]
+			date = nameArray[len(FileName)+1:]
 			sArray := strings.Split(string(date), ".")
 			if IsMoreTwoMonth(sArray[0], curDate) { // 超过两个月删除
 				err = os.Remove(sPath + info.Name())
