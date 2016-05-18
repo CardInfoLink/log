@@ -27,8 +27,8 @@ func init() {
 	PreLog()
 	RemoveLogFile()
 	c := cron.New()
-	c.AddFunc("0 0 0 * * *", PreLog)          // 每隔一天
-	c.AddFunc("0 0 0 1 */2 *", RemoveLogFile) // 每隔2个月
+	c.AddFunc("0 0 0 * * *", PreLog)        // 每隔一天
+	c.AddFunc("0 0 0 1 * *", RemoveLogFile) // 每隔一个月执行
 	c.Start()
 }
 
@@ -56,6 +56,7 @@ func PreLog() {
 				os.Exit(1)
 			}
 			Error(slog)
+			return
 		}
 		strArrays := strings.Split(sPath, "/")
 		ilen := len(strArrays)
@@ -66,6 +67,7 @@ func PreLog() {
 				os.Exit(1)
 			}
 			Error(slog)
+			return
 		}
 		FileName = strArrays[ilen-1]
 	}
@@ -85,8 +87,10 @@ func PreLog() {
 			os.Exit(1)
 		}
 		Error(slog)
+		return
 	}
 
+	SetPrinter(NewStandard(pFile, DefaultFormat))
 	if LogFile != nil {
 		err = LogFile.Close()
 		if err != nil {
@@ -94,7 +98,6 @@ func PreLog() {
 		}
 	}
 	LogFile = pFile
-	SetPrinter(NewStandard(LogFile, DefaultFormat))
 }
 
 func RemoveLogFile() {
