@@ -122,7 +122,7 @@ func RemoveLogFile() {
 	curDate := cur.Add(d * 60).Format("20060102")
 
 	filepath.Walk(fullPath, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() && strings.Index(info.Name(), FileType) > 0 {
+		if (info != nil) && (!info.IsDir()) && (strings.Index(info.Name(), FileType) > 0) {
 			nameArray := []byte(info.Name())
 			var date []byte
 			date = nameArray[len(FileName)+1:]
