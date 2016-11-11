@@ -12,23 +12,37 @@ import (
 )
 
 const (
-	QuickPay  = "quickpay"
-	Phantom   = "phantom"
-	AngryCard = "angrycard"
+	QUICKPAY  = "quickpay"
+	PHANTOM   = "phantom"
+	ANGRYCARD = "angrycard"
+	BIGCAT    = "bigcat"
+	MAGISYNC  = "magisync"
+	MAGISETT  = "magisett"
 	LogDir    = "logs/"
 	FileType  = ".log"
 )
 
+var progArr = []string{
+	QUICKPAY,
+	PHANTOM,
+	ANGRYCARD,
+	BIGCAT,
+	MAGISYNC,
+	MAGISETT,
+}
+
 var LogFile *os.File = nil
-var FileName string = ""
+var szFileName string = ""
+var bNeedScrolling = false
 
 func init() {
 	// 日志初始化
 	PreLog()
-	RemoveLogFile()
+	// RemoveLogFile()
 	c := cron.New()
-	c.AddFunc("0 0 0 * * *", PreLog)        // 每隔一天
-	c.AddFunc("0 0 0 1 * *", RemoveLogFile) // 每隔一个月执行
+	c.AddFunc("0 0 0 * * ?", PreLog) // 每隔一天
+	// c.AddFunc("0/3 * * * * ?", PreLog) // 每隔3秒
+	// c.AddFunc("0 0 0 1 * *", RemoveLogFile) // 每隔一个月执行
 	c.Start()
 }
 
@@ -45,46 +59,54 @@ type Printer interface {
 	ChangeWriter(w io.Writer)
 }
 
-// 由于改方法是定时任务，第一次和程序一起启动，如果失败，在控制台输出错误信息，如果后续定时任务出现处理失败，则沿用原来的log文件
-func PreLog() {
-	if FileName == "" {
-		sPath, err := os.Getwd()
-		if err != nil {
-			slog := fmt.Sprintf("get the current file path error, the error is %s\n", err)
-			if LogFile == nil {
-				fmt.Println(slog)
-				os.Exit(1)
-			}
-			Error(slog)
-			return
-		}
-		strArrays := strings.Split(sPath, "/")
-		ilen := len(strArrays)
-		if ilen == 0 {
-			slog := fmt.Sprintf("parse the file path to array error, the filepath is %s\n", sPath)
-			if LogFile == nil {
-				fmt.Println(slog)
-				os.Exit(1)
-			}
-			Error(slog)
-			return
-		}
-		FileName = strArrays[ilen-1]
-	}
+func SetFileName(fileName string) {
+	szFileName = fileName
+	bNeedScrolling = needScrolling(fileName)
+}
 
-	if (FileName != QuickPay) && (FileName != Phantom) && (FileName != AngryCard) {
+func needScrolling(fileName string) bool {
+	for _, progName := range progArr {
+		if strings.Contains(fileName, progName) {
+			return true
+		}
+	}
+	return false
+}
+
+// 由于该方法是定时任务，第一次和程序一起启动，如果失败，在控制台输出错误信息，如果后续定时任务出现处理失败，则沿用原来的log文件
+func PreLog() {
+	if szFileName == "" {
+		_, szFileName = filepath.Split(os.Args[0])
+		bNeedScrolling = needScrolling(szFileName)
 		SetPrinter(NewStandard(os.Stdout, DefaultFormat))
 		return
 	}
 
-	// 类似phantom_20160512.log与quickpay_20160512.log
-	sName := LogDir + FileName + "_" + time.Now().Format("20060102") + FileType
-	pFile, err := os.Create(sName)
+	if !bNeedScrolling {
+		SetPrinter(NewStandard(os.Stdout, DefaultFormat))
+		return
+	}
+
+	currLogFileName := LogDir + szFileName + FileType
+	// 类似phantom.log.20160512与quickpay.log.20160512
+	sName := LogDir + szFileName + FileType + "." + time.Now().Format("20060102")
+	err := os.Rename(currLogFileName, sName) // 重命名当前log文件名
+	if err != nil {
+		slog := fmt.Sprintf("rename the log file error, the error is %s\n", err)
+		if LogFile == nil {
+			fmt.Println(slog)
+			return
+		}
+		Error(slog)
+		return
+	}
+
+	pFile, err := os.Create(currLogFileName)
 	if (err != nil) || (pFile == nil) {
 		slog := fmt.Sprintf("create the log file error, the error is %s\n", err)
 		if LogFile == nil {
 			fmt.Println(slog)
-			os.Exit(1)
+			return
 		}
 		Error(slog)
 		return
@@ -125,7 +147,7 @@ func RemoveLogFile() {
 		if (info != nil) && (!info.IsDir()) && (strings.Index(info.Name(), FileType) > 0) {
 			nameArray := []byte(info.Name())
 			var date []byte
-			date = nameArray[len(FileName)+1:]
+			date = nameArray[len(szFileName)+1:]
 			sArray := strings.Split(string(date), ".")
 			if IsMoreTwoMonth(sArray[0], curDate) { // 超过两个月删除
 				err = os.Remove(sPath + info.Name())
@@ -139,6 +161,7 @@ func RemoveLogFile() {
 	})
 }
 
+// true:超过两个月
 func IsMoreTwoMonth(origDate, curDate string) bool {
 	if strings.Compare(origDate, curDate) <= 0 {
 		return true
