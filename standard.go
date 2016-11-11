@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -120,7 +121,8 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 		if ok && s.prefixLen < len(r.File) {
 			r.File = r.File[s.prefixLen:]
 		} else {
-			r.File = "???"
+			//r.File = "???"
+			_, r.File = filepath.Split(r.File)
 		}
 	}
 
