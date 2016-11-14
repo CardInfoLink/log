@@ -89,7 +89,7 @@ func PreLog() {
 
 	currLogFileName := LogDir + szFileName + FileType
 	// 类似phantom.log.20160512与quickpay.log.20160512
-	sName := LogDir + szFileName + FileType + "." + time.Now().Format("20060102")
+	sName := LogDir + szFileName + FileType + "." + time.Now().AddDate(0, 0, -1).Format("20060102")
 	err := os.Rename(currLogFileName, sName) // 重命名当前log文件名
 	if err != nil {
 		slog := fmt.Sprintf("rename the log file error, the error is %s\n", err)
