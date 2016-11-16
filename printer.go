@@ -18,7 +18,6 @@ const (
 	BIGCAT    = "bigcat"
 	MAGISYNC  = "magisync"
 	MAGISETT  = "magisett"
-	LogDir    = "logs/"
 	FileType  = ".log"
 )
 
@@ -31,6 +30,7 @@ var progArr = []string{
 	MAGISETT,
 }
 
+var LogDir = "logs/"
 var LogFile *os.File = nil
 var szFileName string = ""
 var bNeedScrolling = false
