@@ -83,7 +83,6 @@ func PreLog() {
 	}
 
 	if !bNeedScrolling {
-		SetPrinter(NewStandard(os.Stdout, DefaultFormat))
 		return
 	}
 
