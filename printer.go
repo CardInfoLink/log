@@ -18,6 +18,9 @@ const (
 	BIGCAT    = "bigcat"
 	MAGISYNC  = "magisync"
 	MAGISETT  = "magisett"
+	SHOPCODE  = "shopcode"
+	MEDUSA    = "medusa"
+	GOVERNOR  = "governor"
 	FileType  = ".log"
 )
 
@@ -28,6 +31,9 @@ var progArr = []string{
 	BIGCAT,
 	MAGISYNC,
 	MAGISETT,
+	SHOPCODE,
+	MEDUSA,
+	GOVERNOR,
 }
 
 var LogDir = "logs/"
