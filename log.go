@@ -1,12 +1,15 @@
 package log
 
-import "io"
+import (
+	"io"
+	"os"
+)
 
 // 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
 var v Level = DebugLevel
 
 // 默认实现，输出到 os.Std 中，可以重定向到文件中，也可以调用 SetPrinter 其他方式输出
-var std Printer
+var std Printer = NewStandard(os.Stdout, DefaultFormat)
 
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
