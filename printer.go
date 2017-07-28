@@ -81,8 +81,8 @@ func needScrolling(fileName string) bool {
 
 // 由于该方法是定时任务，第一次和程序一起启动，如果失败，在控制台输出错误信息，如果后续定时任务出现处理失败，则沿用原来的log文件
 func PreLog() {
-	Infof("LogDir: %s\n", LogDir)
 	if szFileName == "" {
+		Infof("LogDir: %s\n", LogDir)
 		_, szFileName = filepath.Split(os.Args[0])
 		bNeedScrolling = needScrolling(szFileName)
 		return
