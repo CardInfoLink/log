@@ -1,6 +1,8 @@
 package log
 
-import "io"
+import (
+	"io"
+)
 
 // 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
 var v Level = DebugLevel
