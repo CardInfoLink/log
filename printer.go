@@ -21,6 +21,7 @@ const (
 	SHOPCODE  = "shopcode"
 	MEDUSA    = "medusa"
 	GOVERNOR  = "governor"
+	PUMPKIN   = "pumpkin"
 	FileType  = ".log"
 )
 
@@ -34,6 +35,7 @@ var progArr = []string{
 	SHOPCODE,
 	MEDUSA,
 	GOVERNOR,
+	PUMPKIN,
 }
 
 var LogDir = "logs/"
