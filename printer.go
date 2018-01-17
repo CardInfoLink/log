@@ -12,23 +12,25 @@ import (
 )
 
 const (
-	QUICKPAY  = "quickpay"
-	PHANTOM   = "phantom"
-	ANGRYCARD = "angrycard"
-	BIGCAT    = "bigcat"
-	MAGISYNC  = "magisync"
-	MAGISETT  = "magisett"
-	SHOPCODE  = "shopcode"
-	MEDUSA    = "medusa"
-	GOVERNOR  = "governor"
-	PUMPKIN   = "pumpkin"
-	FileType  = ".log"
+	QUICKPAY    = "quickpay"
+	PHANTOM     = "phantom"
+	ANGRYCARD   = "angrycard"
+	ANGRYNOTIFY = "angrynotify"
+	BIGCAT      = "bigcat"
+	MAGISYNC    = "magisync"
+	MAGISETT    = "magisett"
+	SHOPCODE    = "shopcode"
+	MEDUSA      = "medusa"
+	GOVERNOR    = "governor"
+	PUMPKIN     = "pumpkin"
+	FileType    = ".log"
 )
 
 var progArr = []string{
 	QUICKPAY,
 	PHANTOM,
 	ANGRYCARD,
+	ANGRYNOTIFY,
 	BIGCAT,
 	MAGISYNC,
 	MAGISETT,
