@@ -23,6 +23,7 @@ const (
 	MEDUSA      = "medusa"
 	GOVERNOR    = "governor"
 	PUMPKIN     = "pumpkin"
+	LOGSTING    = "logsting"
 	FileType    = ".log"
 )
 
@@ -38,6 +39,7 @@ var progArr = []string{
 	MEDUSA,
 	GOVERNOR,
 	PUMPKIN,
+	LOGSTING,
 }
 
 var LogDir = "logs/"
