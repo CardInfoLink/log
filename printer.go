@@ -24,6 +24,7 @@ const (
 	GOVERNOR    = "governor"
 	PUMPKIN     = "pumpkin"
 	LOGSTING    = "logsting"
+	CARDCOMMON  = "cardcommon"
 	FileType    = ".log"
 )
 
@@ -40,6 +41,7 @@ var progArr = []string{
 	GOVERNOR,
 	PUMPKIN,
 	LOGSTING,
+	CARDCOMMON,
 }
 
 var LogDir = "logs/"
